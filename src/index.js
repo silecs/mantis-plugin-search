@@ -1,8 +1,10 @@
 import m from "mithril"
-import state from "./state"
+
 import SelectProject from "./select-project"
 import SelectCategory from "./select-category"
-import { loadProjects } from "./loaders"
+import TicketTable from "./ticket-table"
+
+import { loadIssues, loadProjects } from "./loaders"
 
 const SearchForm = {
     view() {
@@ -10,7 +12,13 @@ const SearchForm = {
             m('form.form-horizontal',
                 m(SelectProject),
                 m(SelectCategory),
-            )
+                m("button.btn.btn-primary",
+                    {
+                        type: "button",
+                        onclick: loadIssues
+                    }, "Rafraîchir")
+            ),
+            m(TicketTable),
         )
     }
 }

@@ -72,9 +72,10 @@ function setAvailableCategories(projectId) {
 }
 
 const state = {
-    loading: false,
     available,
     filter,
+    issues: [],
+    loading: false,
 }
 
 export default state
