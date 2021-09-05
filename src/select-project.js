@@ -2,16 +2,18 @@ import m from "mithril"
 import state from "./state"
 
 function onChange(event) {
-    state.setProjectId(event.target.value)
+    state.filter.setProjectId(event.target.value)
 }
+
 const SelectProject = {
     view() {
         return m('.form-group',
             m('label.control-label.col-sm-2', {"for": "search-project"}, "Projet"),
             m('.col-sm-10',
                 m('select.form-control', {onchange: onChange},
-                    m('option', {value: "0"}, "Tous"),
-                    m('option', {value: "28"}, "Mir@bel2"),
+                    state.available.getProjectList().map(function(p) {
+                        return m('option', {value: p.id}, p.name)
+                    })
                 )
             )
         )
