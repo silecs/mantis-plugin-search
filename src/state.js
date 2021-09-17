@@ -16,6 +16,7 @@ const available = {
         return all
     },
     categories: [],
+    status: [],
     getCategoryList() {
         const all = [
             new Category(ANY, "Toutes"),
@@ -54,6 +55,19 @@ const filter = {
         filter.categoryId = (id >= NONE ? id : ANY)
         return (oldId !== filter.categoryId)
     },
+    statusIds: [],
+    setStatusIds(values) {
+        const oldIds = filter.statusIds
+        filter.statusIds = values.map(x => parseInt(x)).filter(x => x > 0).sort((a, b) => a - b)
+        return !haveSameContent(oldIds, filter.statusIds)
+    }
+}
+
+function haveSameContent(array1, array2) {
+    if (array1.length !== array2.length) {
+        return false
+    }
+    return array1.every((value, index) => (value === array2[index]))
 }
 
 function setAvailableCategories(projectId) {

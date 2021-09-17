@@ -3,9 +3,7 @@ import state from "./state"
 import { updateRoute } from "./routes"
 
 function onChange(event) {
-    if (state.filter.setCategoryId(event.target.value)) {
-        updateRoute()
-    }
+    state.filter.setCategoryId(event.target.value)
 }
 
 const SelectCategory = {

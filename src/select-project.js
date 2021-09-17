@@ -1,11 +1,8 @@
 import m from "mithril"
 import state from "./state"
-import { updateRoute } from "./routes"
 
 function onChange(event) {
-    if (state.filter.setProjectId(event.target.value)) {
-        updateRoute()
-    }
+    state.filter.setProjectId(event.target.value)
 }
 
 const SelectProject = {

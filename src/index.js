@@ -2,18 +2,22 @@ import m from "mithril"
 
 import SelectProject from "./select-project"
 import SelectCategory from "./select-category"
+import SelectStatus from "./select-status"
 import TicketTable from "./ticket-table"
 
 import state from "./state"
-import { loadIssues, loadProjects } from "./loaders"
+import { loadIssues, loadProjects, loadAvailableStatus } from "./loaders"
 
 const SearchForm = {
     oninit(vnode) {
-        loadProjects().then(function() {
+        loadAvailableStatus()
+        .then(loadProjects)
+        .then(function() {
             if (vnode.attrs.projectId) {
                 state.filter.setProjectId(parseInt(vnode.attrs.projectId))
                 state.filter.categoryId = parseInt(vnode.attrs.categoryId)
-                m.redraw()
+                state.filter.statusIds = vnode.attrs.statusIds.split(/,/).map(x => parseInt(x))
+                loadIssues()
             }
         })
     },
@@ -22,6 +26,7 @@ const SearchForm = {
             m('form.form-horizontal',
                 m(SelectProject),
                 m(SelectCategory),
+                m(SelectStatus),
                 m("div.form-group",
                     m("div.col-sm-offset-2.col-sm-10",
                         m("button.btn.btn-primary",
@@ -39,5 +44,5 @@ const SearchForm = {
 const root = document.getElementById('search-container')
 m.route(root, '', {
     '/': SearchForm,
-    '/p/:projectId/c/:categoryId': SearchForm,
+    '/p/:projectId/c/:categoryId/s/:statusIds': SearchForm,
 })
