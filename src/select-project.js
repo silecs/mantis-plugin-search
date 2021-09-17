@@ -1,8 +1,11 @@
 import m from "mithril"
 import state from "./state"
+import { updateRoute } from "./routes"
 
 function onChange(event) {
-    state.filter.setProjectId(event.target.value)
+    if (state.filter.setProjectId(event.target.value)) {
+        updateRoute()
+    }
 }
 
 const SelectProject = {
@@ -12,7 +15,10 @@ const SelectProject = {
             m('.col-sm-10',
                 m('select.form-control', {onchange: onChange},
                     state.available.getProjectList().map(function(p) {
-                        return m('option', {value: p.id}, p.name)
+                        return m('option',
+                            {value: p.id, selected: p.id === state.filter.projectId},
+                            p.name
+                        )
                     })
                 )
             )

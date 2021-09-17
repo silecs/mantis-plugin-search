@@ -2,7 +2,7 @@ import Category from "./response/category"
 import Project from "./response/project"
 
 const ANY = -1
-const NONE = 0
+const NONE = -2
 
 const available = {
     projects: [],
@@ -32,7 +32,7 @@ const filter = {
     projectId: ANY,
     setProjectId(value) {
         if (state.loading) {
-            return;
+            return false;
         }
         const oldId = filter.projectId
         const id = parseInt(value)
@@ -40,17 +40,19 @@ const filter = {
         if (oldId !== filter.projectId) {
             filter.categoryId = ANY
             setAvailableCategories(filter.projectId)
+            return true
         }
-        console.log(state)
+        return false
     },
     categoryId: ANY,
     setCategoryId(value) {
         if (state.loading) {
-            return;
+            return false;
         }
+        const oldId = filter.categoryId
         const id = parseInt(value)
         filter.categoryId = (id >= NONE ? id : ANY)
-        console.log(state)
+        return (oldId !== filter.categoryId)
     },
 }
 
