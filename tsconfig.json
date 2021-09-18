@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./files",
+    "target": "es2015",
+    "lib": [
+        "dom",
+        "es2015.promise"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "moduleResolution": "node"
+  },
+  "include": ["./src/**/*.ts"]
+}
+

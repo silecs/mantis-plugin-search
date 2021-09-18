@@ -8,7 +8,13 @@ import TicketTable from "./ticket-table"
 import state from "./state"
 import { loadIssues, loadProjects, loadAvailableStatus } from "./loaders"
 
-const SearchForm = {
+interface UrlAttrs {
+    projectId: string;
+    categoryId: string;
+    statusIds: string;
+}
+
+const SearchForm: m.Component<UrlAttrs> = {
     oninit(vnode) {
         loadAvailableStatus()
         .then(loadProjects)
