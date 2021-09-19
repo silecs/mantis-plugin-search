@@ -6,7 +6,7 @@ function onChange(event) {
     state.filter.setCategoryId(event.target.value)
 }
 
-const SelectCategory = {
+const SelectCategory: m.Component<void> = {
     view() {
         return m('.form-group',
             m('label.control-label.col-sm-2', {"for": "filter-category"}, "Catégorie"),

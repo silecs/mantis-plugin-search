@@ -1,7 +1,7 @@
 import m from "mithril"
 import state from "./state"
 
-function updateRoute() {
+function updateRoute(): void {
     m.route.set(
         '/p/:projectId/c/:categoryId/s/:statusIds',
         {

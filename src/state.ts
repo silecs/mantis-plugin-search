@@ -1,14 +1,21 @@
-import Category from "./response/category"
-import Project from "./response/project"
+import * as Mantis from "./mantis"
 
 const ANY = -1
 const NONE = -2
 
-const available = {
+interface Available {
+    projects: Mantis.Project[];
+    categories: Mantis.Category[];
+    status: Mantis.Status[];
+    getProjectList: () => {id: number, name: string}[];
+    getCategoryList: () => {id: number, name: string}[];
+}
+
+const available: Available = {
     projects: [],
     getProjectList() {
         const all = [
-            Object.assign(new Project(), {id: ANY, name: "Tous"})
+            {id: ANY, name: "Tous"}
         ]
         for (const p of available.projects) {
             all.push(p)
@@ -18,9 +25,12 @@ const available = {
     categories: [],
     status: [],
     getCategoryList() {
+        if (available.categories.length === 0) {
+            return []
+        }
         const all = [
-            new Category(ANY, "Toutes"),
-            new Category(NONE, "Aucune"),
+            {id: ANY, name: "Toutes"},
+            {id: NONE, name: "Aucune"},
         ]
         for (const c of available.categories) {
             all.push(c)
@@ -29,14 +39,23 @@ const available = {
     },
 }
 
-const filter = {
+interface Filter {
+    projectId: number;
+    categoryId: number;
+    statusIds: number[];
+    setProjectId: (id: number) => boolean;
+    setCategoryId: (id: number) => boolean;
+    setStatusIds: (ids: number[]) => boolean;
+    formatForMantis: () => Mantis.Filter;
+}
+
+const filter: Filter = {
     projectId: ANY,
-    setProjectId(value) {
+    setProjectId(id) {
         if (state.loading) {
             return false;
         }
         const oldId = filter.projectId
-        const id = parseInt(value)
         filter.projectId = (id >= NONE ? id : ANY)
         if (oldId !== filter.projectId) {
             filter.categoryId = ANY
@@ -46,21 +65,44 @@ const filter = {
         return false
     },
     categoryId: ANY,
-    setCategoryId(value) {
+    setCategoryId(id) {
         if (state.loading) {
             return false;
         }
         const oldId = filter.categoryId
-        const id = parseInt(value)
         filter.categoryId = (id >= NONE ? id : ANY)
         return (oldId !== filter.categoryId)
     },
     statusIds: [],
-    setStatusIds(values) {
+    setStatusIds(ids) {
         const oldIds = filter.statusIds
-        filter.statusIds = values.map(x => parseInt(x)).filter(x => x > 0).sort((a, b) => a - b)
+        filter.statusIds = ids.filter(x => x > 0).sort((a, b) => a - b)
         return !haveSameContent(oldIds, filter.statusIds)
-    }
+    },
+    formatForMantis() {
+        const res: Mantis.Filter = {}
+    
+        if (this.projectId) {
+            res.project_id = [this.projectId]
+        }
+    
+        if (this.categoryId === -2) { // tickets with no category
+            res.category_id = [this.categoryId]
+        } else if (this.categoryId > 0) {
+            for (let c of state.available.categories) {
+                if (this.categoryId === c.id) {
+                    res.category_id = [c.name]
+                    break
+                }
+            }
+            //res.category_id = [f.categoryId]
+        }
+    
+        if (this.statusIds.length > 0) {
+            res.status = this.statusIds
+        }
+        return res
+    },
 }
 
 function haveSameContent(array1, array2) {

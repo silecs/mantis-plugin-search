@@ -21,8 +21,8 @@ const SearchForm: m.Component<UrlAttrs> = {
         .then(function() {
             if (vnode.attrs.projectId) {
                 state.filter.setProjectId(parseInt(vnode.attrs.projectId))
-                state.filter.categoryId = parseInt(vnode.attrs.categoryId)
-                state.filter.statusIds = vnode.attrs.statusIds.split(/,/).map(x => parseInt(x))
+                state.filter.setCategoryId(parseInt(vnode.attrs.categoryId))
+                state.filter.setStatusIds(vnode.attrs.statusIds.split(/,/).map(x => parseInt(x)))
                 loadIssues()
             }
         })

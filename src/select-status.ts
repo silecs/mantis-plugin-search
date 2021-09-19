@@ -12,7 +12,7 @@ function onChange(event) {
     state.filter.setStatusIds(result)
 }
 
-const SelectStatus = {
+const SelectStatus: m.Component<void> = {
     view() {
         return m('.form-group',
             m('label.control-label.col-sm-2', "Statuts"),

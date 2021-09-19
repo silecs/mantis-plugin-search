@@ -1,7 +1,8 @@
 import m from "mithril"
 import state from "./state"
+import * as Mantis from "./mantis"
 
-function issueToTr(issue) {
+function issueToTr(issue: Mantis.Issue) {
     return m("tr.status-" + issue.status.id + "-bg",
         m("td.column-priority", issue.priority.label),
         m("td.column-id", issue.id),
@@ -9,7 +10,7 @@ function issueToTr(issue) {
         m("td.column-category", issue.category.name),
         m("td.column-severity", issue.severity.label),
         m("td.column-status", issue.status.label),
-        m("td.column-last-modified", issue.lastUpdated.toISOString().substring(0,10)),
+        m("td.column-last-modified", (new Date(issue.updated_at)).toISOString().substring(0, 10)),
         m("td.column-summary", issue.summary),
     )
 }
@@ -40,4 +41,4 @@ export default {
             )
         )
     }
-}
+} as m.Component<void>
