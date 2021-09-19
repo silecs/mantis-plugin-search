@@ -1,12 +1,16 @@
 import m from "mithril"
 import state from "./state"
 
-function onChange(event) {
-    let result = []
-    let checkboxes = event.target.closest("div.form-control").querySelectorAll('input[type="checkbox"]')
+function onChange(event: Event) {
+    let result = [] as number[]
+    const row = (event.target as HTMLElement).closest("div.form-control")
+    if (row === null) {
+        return;
+    }
+    let checkboxes = row.querySelectorAll('input[type="checkbox"]')
     for (let c of checkboxes) {
-        if (c.checked) {
-            result.push(parseInt(c.getAttribute("data-id")))
+        if ((c as HTMLInputElement).checked) {
+            result.push(parseInt(c.getAttribute("data-id") || "0"))
         }
     }
     state.filter.setStatusIds(result)
@@ -20,7 +24,13 @@ const SelectStatus: m.Component<void> = {
                 m('div.form-control', {onchange: onChange},
                     state.available.status.map(function(s) {
                         return m('label.checkbox-inline',
-                            m('input', {type: "checkbox", name:"status-" + s.id, value: "1", checked: state.filter.statusIds.includes(s.id), "data-id": s.id}),
+                            m('input', {
+                                type: "checkbox",
+                                name:"status-" + s.id,
+                                value: "1",
+                                checked: state.filter.statusIds.includes(s.id),
+                                "data-id": s.id}
+                            ),
                             s.label
                         )
                     })

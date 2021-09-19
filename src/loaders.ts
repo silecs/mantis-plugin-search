@@ -15,7 +15,7 @@ type ConfigResponse = {
 
 function loadProjects(): Promise<void> {
     if (state.loading) {
-        return;
+        throw new Error("Already loading")
     }
     state.loading = true
     return m.request({
@@ -33,7 +33,7 @@ function loadProjects(): Promise<void> {
 
 function loadIssues(): Promise<void> {
     if (state.loading) {
-        return;
+        throw new Error("Already loading")
     }
     state.loading = true
     return m.request({

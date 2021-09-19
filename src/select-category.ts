@@ -1,9 +1,9 @@
 import m from "mithril"
 import state from "./state"
-import { updateRoute } from "./routes"
 
-function onChange(event) {
-    state.filter.setCategoryId(event.target.value)
+function onChange(event: Event) {
+    const target = event.target as HTMLInputElement
+    state.filter.setCategoryId(parseInt(target.value))
 }
 
 const SelectCategory: m.Component<void> = {

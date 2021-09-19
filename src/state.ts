@@ -87,7 +87,7 @@ const filter: Filter = {
         }
     
         if (this.categoryId === -2) { // tickets with no category
-            res.category_id = [this.categoryId]
+            res.category_id = [-2]
         } else if (this.categoryId > 0) {
             for (let c of state.available.categories) {
                 if (this.categoryId === c.id) {
@@ -95,7 +95,6 @@ const filter: Filter = {
                     break
                 }
             }
-            //res.category_id = [f.categoryId]
         }
     
         if (this.statusIds.length > 0) {
@@ -105,14 +104,14 @@ const filter: Filter = {
     },
 }
 
-function haveSameContent(array1, array2) {
+function haveSameContent<Type>(array1: Type[], array2: Type[]): boolean {
     if (array1.length !== array2.length) {
         return false
     }
     return array1.every((value, index) => (value === array2[index]))
 }
 
-function setAvailableCategories(projectId) {
+function setAvailableCategories(projectId: number) {
     console.log("setCat", projectId)
     if (projectId === NONE || projectId === ANY) {
         available.categories = []
@@ -132,7 +131,7 @@ function setAvailableCategories(projectId) {
 const state = {
     available,
     filter,
-    issues: [],
+    issues: [] as Mantis.Issue[],
     loading: false,
 }
 

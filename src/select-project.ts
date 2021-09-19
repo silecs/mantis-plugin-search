@@ -1,8 +1,9 @@
 import m from "mithril"
 import state from "./state"
 
-function onChange(event) {
-    state.filter.setProjectId(event.target.value)
+function onChange(event: Event) {
+    const target = event.target as HTMLInputElement
+    state.filter.setProjectId(parseInt(target.value))
 }
 
 const SelectProject: m.Component<void> = {

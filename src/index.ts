@@ -48,7 +48,11 @@ const SearchForm: m.Component<UrlAttrs> = {
 }
 
 const root = document.getElementById('search-container')
-m.route(root, '', {
-    '/': SearchForm,
-    '/p/:projectId/c/:categoryId/s/:statusIds': SearchForm,
-})
+if (root === null) {
+    document.body.innerHTML = "#search-container is missing, coding error."
+} else {
+    m.route(root, '', {
+        '/': SearchForm,
+        '/p/:projectId/c/:categoryId/s/:statusIds': SearchForm,
+    })
+}
