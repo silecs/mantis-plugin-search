@@ -43,6 +43,7 @@ interface Filter {
     projectId: number;
     categoryId: number;
     statusIds: number[];
+    searchText: string;
     setProjectId: (id: number) => boolean;
     setCategoryId: (id: number) => boolean;
     setStatusIds: (ids: number[]) => boolean;
@@ -79,6 +80,7 @@ const filter: Filter = {
         filter.statusIds = ids.filter(x => x > 0).sort((a, b) => a - b)
         return !haveSameContent(oldIds, filter.statusIds)
     },
+    searchText: "",
     formatForMantis() {
         const res: Mantis.Filter = {}
     
@@ -96,7 +98,11 @@ const filter: Filter = {
                 }
             }
         }
-    
+
+        if (this.searchText !== "") {
+            res.search = this.searchText
+        }
+
         if (this.statusIds.length > 0) {
             res.status = this.statusIds
         }

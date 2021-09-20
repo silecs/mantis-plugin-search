@@ -51,6 +51,7 @@ export type Filter = {
     project_id?: number[];
     category_id?: string[] | [-2]; // category names, or no category
     status?: number[];
+    search?: string;
 }
 
 type Rank = {

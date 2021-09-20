@@ -1,5 +1,6 @@
 import m from "mithril"
 
+import SearchText from "./search-text"
 import SelectProject from "./select-project"
 import SelectCategory from "./select-category"
 import SelectStatus from "./select-status"
@@ -7,11 +8,13 @@ import TicketTable from "./ticket-table"
 
 import state from "./state"
 import { loadIssues, loadProjects, loadAvailableStatus } from "./loaders"
+import searchText from "./search-text"
 
 interface UrlAttrs {
     projectId: string;
     categoryId: string;
     statusIds: string;
+    searchText: string;
 }
 
 const SearchForm: m.Component<UrlAttrs> = {
@@ -22,17 +25,23 @@ const SearchForm: m.Component<UrlAttrs> = {
             if (vnode.attrs.projectId) {
                 state.filter.setProjectId(parseInt(vnode.attrs.projectId))
                 state.filter.setCategoryId(parseInt(vnode.attrs.categoryId))
-                state.filter.setStatusIds(vnode.attrs.statusIds.split(/,/).map(x => parseInt(x)))
+                if (vnode.attrs.statusIds !== "-") {
+                    state.filter.setStatusIds(vnode.attrs.statusIds.split(/,/).map(x => parseInt(x)))
+                }
+                if (vnode.attrs.searchText !== "-") {
+                    state.filter.searchText = vnode.attrs.searchText
+                }
                 loadIssues()
             }
         })
     },
     view() {
         return m('.col-xs-12',
-            m('form.form-horizontal',
+            m('form.form-horizontal', {onsubmit() { loadIssues(); return false; }},
                 m(SelectProject),
                 m(SelectCategory),
                 m(SelectStatus),
+                m(SearchText),
                 m("div.form-group",
                     m("div.col-sm-offset-2.col-sm-10",
                         m("button.btn.btn-primary",
@@ -53,6 +62,6 @@ if (root === null) {
 } else {
     m.route(root, '', {
         '/': SearchForm,
-        '/p/:projectId/c/:categoryId/s/:statusIds': SearchForm,
+        '/p/:projectId/c/:categoryId/s/:statusIds/t:searchText': SearchForm,
     })
 }
