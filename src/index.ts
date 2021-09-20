@@ -8,13 +8,11 @@ import TicketTable from "./ticket-table"
 
 import state from "./state"
 import { loadIssues, loadProjects, loadAvailableStatus } from "./loaders"
-import searchText from "./search-text"
+import { SEARCH_ROUTE, UrlAttrs } from "./routes"
 
-interface UrlAttrs {
-    projectId: string;
-    categoryId: string;
-    statusIds: string;
-    searchText: string;
+function onSubmit() {
+    loadIssues()
+    return false
 }
 
 const SearchForm: m.Component<UrlAttrs> = {
@@ -37,7 +35,7 @@ const SearchForm: m.Component<UrlAttrs> = {
     },
     view() {
         return m('.col-xs-12',
-            m('form.form-horizontal', {onsubmit() { loadIssues(); return false; }},
+            m('form.form-horizontal', {onsubmit: onSubmit},
                 m(SelectProject),
                 m(SelectCategory),
                 m(SelectStatus),
@@ -47,7 +45,7 @@ const SearchForm: m.Component<UrlAttrs> = {
                         m("button.btn.btn-primary",
                             {
                                 type: "button",
-                                onclick: loadIssues
+                                onclick: onSubmit,
                             }, "Rafraîchir la liste de tickets"
                 )))
             ),
@@ -60,8 +58,7 @@ const root = document.getElementById('search-container')
 if (root === null) {
     document.body.innerHTML = "#search-container is missing, coding error."
 } else {
-    m.route(root, '', {
-        '/': SearchForm,
-        '/p/:projectId/c/:categoryId/s/:statusIds/t:searchText': SearchForm,
-    })
+    const routes = {'/': SearchForm} as any
+    routes[SEARCH_ROUTE] = SearchForm
+    m.route(root, '', routes)
 }
