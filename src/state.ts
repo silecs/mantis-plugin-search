@@ -53,9 +53,6 @@ interface Filter {
 const filter: Filter = {
     projectId: ANY,
     setProjectId(id) {
-        if (state.loading) {
-            return false;
-        }
         const oldId = filter.projectId
         filter.projectId = (id >= NONE ? id : ANY)
         if (oldId !== filter.projectId) {
@@ -67,9 +64,6 @@ const filter: Filter = {
     },
     categoryId: ANY,
     setCategoryId(id) {
-        if (state.loading) {
-            return false;
-        }
         const oldId = filter.categoryId
         filter.categoryId = (id >= NONE ? id : ANY)
         return (oldId !== filter.categoryId)

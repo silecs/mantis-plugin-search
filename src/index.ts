@@ -54,11 +54,20 @@ const SearchForm: m.Component<UrlAttrs> = {
     }
 }
 
-const root = document.getElementById('search-container')
-if (root === null) {
+const container = document.getElementById('search-container')
+if (container === null) {
     document.body.innerHTML = "#search-container is missing, coding error."
 } else {
     const routes = {'/': SearchForm} as any
     routes[SEARCH_ROUTE] = SearchForm
-    m.route(root, '', routes)
+    m.route(container, '/', routes)
+
+    // Parse container HTML attributes for initialization data.
+    const projectId = container.getAttribute('data-project-id')
+    if (projectId) {
+        loadProjects().then(function() {
+            state.filter.setProjectId(parseInt(projectId))
+            state.filter.setCategoryId(-1)
+        })
+    }
 }

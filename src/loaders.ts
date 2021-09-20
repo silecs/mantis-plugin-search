@@ -13,30 +13,32 @@ type ConfigResponse = {
     configs: Array<{value: Mantis.Status[]}>;
 }
 
+let loadingProjects: Promise<void>
 function loadProjects(): Promise<void> {
-    if (state.loading) {
-        throw new Error("Already loading")
+    if (loadingProjects) {
+        return loadingProjects
     }
-    state.loading = true
-    return m.request({
+    loadingProjects = m.request({
         method: "GET",
         url: "/api/rest/projects",
         withCredentials: true, // send cookies
     })
     .then(function(data: ProjectsResponse) {
         state.available.projects = data.projects
+        state.filter.setCategoryId(-1)
     })
     .finally(function() {
         state.loading = false
     })
+    return loadingProjects
 }
 
+let loadingIssues: Promise<void>
 function loadIssues(): Promise<void> {
-    if (state.loading) {
-        throw new Error("Already loading")
+    if (loadingIssues) {
+        return loadingIssues
     }
-    state.loading = true
-    return m.request({
+    loadingIssues = m.request({
         method: "GET",
         url: "/api/rest/issues",
         params: {filter: state.filter.formatForMantis()},
@@ -49,10 +51,15 @@ function loadIssues(): Promise<void> {
     .finally(function() {
         state.loading = false
     })
+    return loadingIssues
 }
 
+let loadingStatuses: Promise<void>
 function loadAvailableStatus(): Promise<void> {
-    return m.request({
+    if (loadingStatuses) {
+        return loadingStatuses
+    }
+    loadingStatuses = m.request({
         method: "GET",
         url: "/api/rest/config?option[]=status_enum_string",
         withCredentials: true, // send cookies
@@ -63,6 +70,7 @@ function loadAvailableStatus(): Promise<void> {
             state.available.status.push(s)
         }
     })
+    return loadingStatuses
 }
 
 export {
