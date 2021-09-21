@@ -8,7 +8,7 @@ import TicketTable from "./ticket-table"
 
 import state from "./state"
 import { loadIssues, loadProjects, loadAvailableStatus } from "./loaders"
-import { SEARCH_ROUTE, UrlAttrs } from "./routes"
+import { SEARCH_ROUTE, UrlAttrs, parseUrlAttrs } from "./routes"
 
 function onSubmit() {
     loadIssues()
@@ -21,14 +21,11 @@ const SearchForm: m.Component<UrlAttrs> = {
         .then(loadProjects)
         .then(function() {
             if (vnode.attrs.projectId) {
-                state.filter.setProjectId(parseInt(vnode.attrs.projectId))
-                state.filter.setCategoryId(parseInt(vnode.attrs.categoryId))
-                if (vnode.attrs.statusIds !== "-") {
-                    state.filter.setStatusIds(vnode.attrs.statusIds.split(/,/).map(x => parseInt(x)))
-                }
-                if (vnode.attrs.searchText !== "-") {
-                    state.filter.searchText = vnode.attrs.searchText
-                }
+                const attrs = parseUrlAttrs(vnode.attrs)
+                state.filter.setProjectId(attrs.projectId)
+                state.filter.setCategoryId(attrs.categoryId)
+                state.filter.setStatusIds(attrs.statusIds)
+                state.filter.searchText = attrs.searchText
                 loadIssues()
             }
         })

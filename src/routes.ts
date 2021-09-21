@@ -8,6 +8,13 @@ interface UrlAttrs {
     searchText: string;
 }
 
+interface StateAttrs {
+    projectId: number;
+    categoryId: number;
+    statusIds: number[];
+    searchText: string;
+}
+
 const SEARCH_ROUTE = '/p/:projectId/c/:categoryId/s/:statusIds/t/:searchText'
 
 function updateRoute(): void {
@@ -20,8 +27,18 @@ function updateRoute(): void {
     m.route.set(SEARCH_ROUTE, attrs)
 }
 
+function parseUrlAttrs(attrs: UrlAttrs): StateAttrs {
+    return {
+        projectId: parseInt(attrs.projectId) || -1,
+        categoryId: parseInt(attrs.categoryId) || -1,
+        statusIds: attrs.statusIds === "-" ? [] : attrs.statusIds.split(/,/).map(x => parseInt(x)),
+        searchText: attrs.searchText === "-" ? "" :  attrs.searchText
+    }
+}
+
 export {
     SEARCH_ROUTE,
     UrlAttrs,
+    parseUrlAttrs,
     updateRoute,
 }
