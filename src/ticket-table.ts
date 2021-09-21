@@ -5,13 +5,13 @@ import * as Mantis from "./mantis"
 function issueToTr(issue: Mantis.Issue) {
     return m("tr.status-" + issue.status.id + "-bg",
         m("td.column-priority", issue.priority.label),
-        m("td.column-id", issue.id),
+        m("td.column-id", m("a", {href: "/view.php?id=" + issue.id}, issue.id)),
         m("td.column-bugnotes-count", ""),
         m("td.column-category", issue.category.name),
         m("td.column-severity", issue.severity.label),
         m("td.column-status", issue.status.label),
         m("td.column-last-modified", (new Date(issue.updated_at)).toISOString().substring(0, 10)),
-        m("td.column-summary", issue.summary),
+        m("td.column-summary", m("a", {href: "/view.php?id=" + issue.id}, issue.summary)),
     )
 }
 
