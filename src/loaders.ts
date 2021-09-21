@@ -15,6 +15,9 @@ type ConfigResponse = {
 
 let loadingProjects: Promise<void>
 function loadProjects(): Promise<void> {
+    if (state.available.projects.length > 0) {
+        return Promise.resolve()
+    }
     if (loadingProjects) {
         return loadingProjects
     }
@@ -56,6 +59,9 @@ function loadIssues(): Promise<void> {
 
 let loadingStatuses: Promise<void>
 function loadAvailableStatus(): Promise<void> {
+    if (state.available.status.length > 0) {
+        return Promise.resolve()
+    }
     if (loadingStatuses) {
         return loadingStatuses
     }
