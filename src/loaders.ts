@@ -36,25 +36,16 @@ function loadProjects(): Promise<void> {
     return loadingProjects
 }
 
-let loadingIssues: Promise<void>
 function loadIssues(): Promise<void> {
-    if (loadingIssues) {
-        return loadingIssues
-    }
-    loadingIssues = m.request({
+    return m.request({
         method: "GET",
         url: "/api/rest/issues",
         params: {filter: state.filter.formatForMantis()},
         withCredentials: true, // send cookies
-    })
-    .then(function(data: IssuesResponse) {
+    }).then(function(data: IssuesResponse) {
         state.issues = data.issues
         updateRoute()
     })
-    .finally(function() {
-        state.loading = false
-    })
-    return loadingIssues
 }
 
 let loadingStatuses: Promise<void>
